@@ -20,7 +20,6 @@ describe('Lighthouse CI upload filesystem reports with url hash', () => {
 
   const writeLhr = () => {
     const fakeLhr = {finalUrl: 'foo.com', categories: {}, audits: {}};
-    fakeLhr.categories.pwa = {score: 0};
     fakeLhr.categories.performance = {score: 0};
     fakeLhr.audits['performance-budget'] = {score: 0};
     for (const key of Object.keys(fullPreset.assertions)) {
@@ -39,19 +38,19 @@ describe('Lighthouse CI upload filesystem reports with url hash', () => {
   // Added unit test for PR#835
   it('url with hash in the reportFilenamePattern', async () => {
     const lhr = JSON.parse(fs.readFileSync(fakeLhrPath, 'utf8'));
-    lhr.finalUrl = `https://www.example.com/#/page1`;
+    lhr.requestedUrl = `https://www.example.com/#/page1`;
     lhr.fetchTime = '2022-10-25T22:34:01.000Z';
     lhr.categories.performance = {score: 0.5};
     lhr.audits['first-contentful-paint'].numericValue = 900;
     fs.writeFileSync(fakeLhrPath.replace(/lhr-\d+/, 'lhr-4'), JSON.stringify(lhr));
 
-    lhr.finalUrl = `https://www.example.com/#/page2`;
+    lhr.requestedUrl = `https://www.example.com/#/page2`;
     lhr.fetchTime = '2022-10-25T22:34:02.000Z';
     lhr.categories.performance = {score: 0.5};
     lhr.audits['first-contentful-paint'].numericValue = 1100;
     fs.writeFileSync(fakeLhrPath.replace(/lhr-\d+/, 'lhr-5'), JSON.stringify(lhr));
 
-    lhr.finalUrl = `https://www.example.com/#/page3`;
+    lhr.requestedUrl = `https://www.example.com/#/page3`;
     lhr.fetchTime = '2022-10-25T22:34:03.000Z';
     lhr.categories.performance = {score: 0.5};
     lhr.audits['first-contentful-paint'].numericValue = 1000;
@@ -95,21 +94,21 @@ describe('Lighthouse CI upload filesystem reports with url hash', () => {
         isRepresentativeRun: true,
         htmlPath: path.join(outputDir, 'www_example_com-_-_page1-2022_10_25_22_34_01.report.html'),
         jsonPath: path.join(outputDir, 'www_example_com-_-_page1-2022_10_25_22_34_01.report.json'),
-        summary: {performance: 0.5, pwa: 0},
+        summary: {performance: 0.5},
       },
       {
         url: 'https://www.example.com/#/page2',
         isRepresentativeRun: true,
         htmlPath: path.join(outputDir, 'www_example_com-_-_page2-2022_10_25_22_34_02.report.html'),
         jsonPath: path.join(outputDir, 'www_example_com-_-_page2-2022_10_25_22_34_02.report.json'),
-        summary: {performance: 0.5, pwa: 0},
+        summary: {performance: 0.5},
       },
       {
         url: 'https://www.example.com/#/page3',
         isRepresentativeRun: true,
         htmlPath: path.join(outputDir, 'www_example_com-_-_page3-2022_10_25_22_34_03.report.html'),
         jsonPath: path.join(outputDir, 'www_example_com-_-_page3-2022_10_25_22_34_03.report.json'),
-        summary: {performance: 0.5, pwa: 0},
+        summary: {performance: 0.5},
       },
     ]);
   }, 15000);
